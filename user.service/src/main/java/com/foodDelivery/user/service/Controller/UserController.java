@@ -1,5 +1,7 @@
 package com.foodDelivery.user.service.Controller;
 
+import com.foodDelivery.user.service.dto.MailDto;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,11 +19,22 @@ import com.foodDelivery.user.service.service.UserServiceImpl;
 public class UserController {
 
 	@Autowired
-	private UserServiceImpl userService;	
-	
+	private UserServiceImpl userService;
+
+	@Autowired
+	private RabbitTemplate template;
+
+//	@Autowired
+//	private MailDto mailDto;
+
 	@PostMapping(value = "/register")
-	public User registration(@RequestBody RegistrationDTO registratioDTO) {
-		User user = userService.addUser(registratioDTO); 
+	public User registration(@RequestBody RegistrationDTO registrationDTO) {
+		User user = userService.addUser(registrationDTO);
+
+		MailDto mailDto = new MailDto();
+		mailDto.setEmail(user.getEmail());
+		mailDto.setName(user.getUserName());
+		template.convertAndSend("mailQueueTopicExchange", "mailrouting", mailDto);
 		return user;
 	}
 	

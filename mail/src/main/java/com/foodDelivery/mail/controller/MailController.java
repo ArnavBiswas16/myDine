@@ -28,7 +28,6 @@ public class MailController {
 	
 	@PostMapping(value = "/sendMail")
 	public void sendMail(@RequestBody MailDto mailDto) {
-		System.out.println("helo");
 		javaMailSender.send(mailService.registrationSuccessMail(mailDto.getEmail(), mailDto.getName()));
 	}
 

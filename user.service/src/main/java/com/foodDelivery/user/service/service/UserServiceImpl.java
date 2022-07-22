@@ -1,5 +1,6 @@
 package com.foodDelivery.user.service.service;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,10 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired 
 	private UserRepository userRepo;
+
+	@Autowired
+	private RabbitTemplate template;
+
 	@Override
 	public User addUser(RegistrationDTO registrationDTO) {
 		User user = registrationToEmployeeModelMapper(registrationDTO);
